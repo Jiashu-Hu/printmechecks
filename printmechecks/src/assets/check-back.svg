@@ -8,7 +8,7 @@
   <rect width="329" height="747" fill="#ffffff"/>
   <defs>
     <clipPath id="watermarkClip">
-      <rect x="25" y="165" width="279" height="430"/>
+      <rect x="15" y="160" width="299" height="435"/>
     </clipPath>
   </defs>
 
@@ -23,7 +23,7 @@
 
   <text x="164.5" y="153" text-anchor="middle" font-size="10" fill="#111111">RESERVED FOR FINANCIAL INSTITUTION USE</text>
 
-  <rect x="25" y="165" width="279" height="557" fill="#f1f1f1"/>
+  <rect x="15" y="160" width="299" height="577" fill="#f1f1f1"/>
 
   <g clip-path="url(#watermarkClip)" opacity="0.42">
     <text x="108" y="380" transform="rotate(-90 108 380)" text-anchor="middle"
