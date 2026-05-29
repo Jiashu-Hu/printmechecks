@@ -1,0 +1,46 @@
+<svg
+  width="329"
+  height="747"
+  viewBox="0 0 329 747"
+  xmlns="http://www.w3.org/2000/svg"
+  font-family="Arial, Helvetica, sans-serif"
+>
+  <rect width="329" height="747" fill="#ffffff"/>
+  <defs>
+    <clipPath id="watermarkClip">
+      <rect x="25" y="165" width="279" height="430"/>
+    </clipPath>
+  </defs>
+
+  <text x="25" y="30" font-size="11" fill="#111111">ENDORSE HERE</text>
+
+  <line x1="25" y1="52" x2="304" y2="52" stroke="#333333" stroke-width="0.9"/>
+  <line x1="25" y1="82" x2="304" y2="82" stroke="#333333" stroke-width="0.9"/>
+  <line x1="25" y1="112" x2="304" y2="112" stroke="#333333" stroke-width="0.9"/>
+
+  <text x="164.5" y="129" text-anchor="middle" font-size="10" font-weight="bold" fill="#111111">DO NOT WRITE, STAMP, OR SIGN BELOW THIS LINE</text>
+  <line x1="25" y1="133" x2="304" y2="133" stroke="#111111" stroke-width="2.4"/>
+
+  <text x="164.5" y="153" text-anchor="middle" font-size="10" fill="#111111">RESERVED FOR FINANCIAL INSTITUTION USE</text>
+
+  <rect x="25" y="165" width="279" height="557" fill="#f1f1f1"/>
+
+  <g clip-path="url(#watermarkClip)" opacity="0.42">
+    <text x="108" y="380" transform="rotate(-90 108 380)" text-anchor="middle"
+      font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="46" font-weight="900" fill="#ffffff" letter-spacing="2">ORIGINAL</text>
+    <text x="221" y="380" transform="rotate(-90 221 380)" text-anchor="middle"
+      font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="46" font-weight="900" fill="#ffffff" letter-spacing="2">DOCUMENT</text>
+  </g>
+
+  <rect x="35" y="600" width="259" height="110" fill="none" stroke="#111111" stroke-width="1"/>
+  <text x="164.5" y="615" text-anchor="middle" font-size="10" fill="#111111" dominant-baseline="hanging">SECURITY FEATURES</text>
+
+  <circle cx="52" cy="648" r="1.6" fill="#111111"/>
+  <text x="68" y="648" font-size="9" fill="#111111" dominant-baseline="middle">Microprinting around border on face</text>
+
+  <circle cx="52" cy="673" r="1.6" fill="#111111"/>
+  <text x="68" y="673" font-size="9" fill="#111111" dominant-baseline="middle">Laid lines on back</text>
+
+  <circle cx="52" cy="698" r="1.6" fill="#111111"/>
+  <text x="68" y="698" font-size="9" fill="#111111" dominant-baseline="middle">The words &#8220;ORIGINAL DOCUMENT&#8221; on back</text>
+</svg>
