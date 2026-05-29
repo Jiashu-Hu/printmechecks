@@ -49,7 +49,7 @@
             <div class="check-back" id="check-back">
                 <img src="@/assets/check-back.svg" class="check-back-template" alt="">
                 <div class="back-endorsement-data">
-                    <div v-for="line in backEndorsementLines" :key="line">{{ line }}</div>
+                    <div v-for="(line, index) in backEndorsementLines" :key="index">{{ line }}</div>
                 </div>
             </div>
         </div>
@@ -416,19 +416,63 @@ label {
     border: 1px solid #c7c7c7;
     background-color: white;
 }
-.check-box {
+.check-sheet {
     width: 1200px;
-    height: 1553px;
+    margin: 0 auto;
+    background-color: white;
+}
+
+.check-front,
+.check-back {
+    position: relative;
+    width: 1200px;
+    height: 462px;
     border: 1px solid #e6e6e6;
     background-color: white;
-    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.check-front {
     background: url('../assets/checkbg.png');
     background-repeat: no-repeat;
     background-size: contain;
 }
 
-#check-box {
-    width: 100%;
+.check-front-print {
+    position: relative;
+}
+
+.check-cut-gap {
+    height: 50px;
+    border-left: 1px dashed #c7c7c7;
+    border-right: 1px dashed #c7c7c7;
+    background-color: white;
+}
+
+.check-back {
+    overflow: hidden;
+}
+
+.check-back-template {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 462px;
+    height: 1048px;
+    transform: translate(-50%, -50%) rotate(90deg);
+    transform-origin: center center;
+}
+
+.back-endorsement-data {
+    position: absolute;
+    top: 72px;
+    right: 112px;
+    width: 310px;
+    font-family: Caveat;
+    font-size: 34px;
+    line-height: 1.15;
+    transform: rotate(-2deg);
+    white-space: pre-line;
 }
 
 @font-face {
