@@ -119,11 +119,38 @@
 </template>
 
 <script setup lang="ts">
-import print from 'print-js';
 import { ToWords } from 'to-words';
-import { ref, reactive, nextTick, watch, onMounted, onUnmounted } from 'vue'
-import { formatMoney } from '../utilities.ts'
-import { useAppStore } from '../stores/app.ts'
+import { computed, ref, reactive, nextTick, watch, onMounted, onUnmounted } from 'vue'
+import { formatMoney } from '../utilities'
+import { useAppStore } from '../stores/app'
+
+type EndorsementMode = 'none' | 'mobile' | 'custom'
+
+type CheckData = {
+    accountHolderName: string
+    accountHolderAddress: string
+    accountHolderCity: string
+    accountHolderState: string
+    accountHolderZip: string
+    checkNumber: string
+    date: string
+    bankName: string
+    amount: string
+    payTo: string
+    memo: string
+    signature: string
+    routingNumber: string
+    bankAccountNumber: string
+    endorsementMode: EndorsementMode
+    endorsementText: string
+    lineLength?: number
+}
+
+type SavedCheckData = Partial<CheckData>
+
+function getEndorsementMode(value: unknown): EndorsementMode {
+    return value === 'mobile' || value === 'custom' ? value : 'none'
+}
 
 const state = useAppStore()
 
@@ -190,36 +217,50 @@ function printCheck () {
 
 function saveToHistory () {
     let checkList = JSON.parse(localStorage.getItem('checkList') || '[]')
-    checkList.push(check)
+    checkList.push({ ...check })
     localStorage.setItem('checkList', JSON.stringify(checkList))
 }
 
-function genNewCheck () {
-    let checkList = JSON.parse(localStorage.getItem('checkList') || '[]')
-    let recentCheck = checkList[checkList.length - 1]
-    let check = {}
-    check.accountHolderName = recentCheck?.accountHolderName || 'John Smith'
-    check.accountHolderAddress = recentCheck?.accountHolderAddress || '123 Cherry Tree Lane'
-    check.accountHolderCity = recentCheck?.accountHolderCity || 'New York'
-    check.accountHolderState = recentCheck?.accountHolderState || 'NY'
-    check.accountHolderZip = recentCheck?.accountHolderZip || '10001'
-    check.checkNumber = recentCheck?.checkNumber ? (parseInt(recentCheck?.checkNumber) + 1) : '100'
-    check.date = new Date().toLocaleDateString()
-    check.bankName = recentCheck?.bankName || 'Bank Name, INC'
-    check.amount = '0.00'
-    check.payTo = 'Michael Johnson'
-    check.memo = recentCheck?.memo || 'Rent'
-    check.signature = recentCheck?.signature || 'John Smith'
-    check.routingNumber = recentCheck?.routingNumber || '022303659'
-    check.bankAccountNumber = recentCheck?.bankAccountNumber || '000000000000'
-    return check
+function genNewCheck (): CheckData {
+    const checkList = JSON.parse(localStorage.getItem('checkList') || '[]') as SavedCheckData[]
+    const recentCheck = checkList[checkList.length - 1]
+    return {
+        accountHolderName: recentCheck?.accountHolderName || 'John Smith',
+        accountHolderAddress: recentCheck?.accountHolderAddress || '123 Cherry Tree Lane',
+        accountHolderCity: recentCheck?.accountHolderCity || 'New York',
+        accountHolderState: recentCheck?.accountHolderState || 'NY',
+        accountHolderZip: recentCheck?.accountHolderZip || '10001',
+        checkNumber: recentCheck?.checkNumber ? `${parseInt(recentCheck.checkNumber, 10) + 1}` : '100',
+        date: new Date().toLocaleDateString(),
+        bankName: recentCheck?.bankName || 'Bank Name, INC',
+        amount: '0.00',
+        payTo: 'Michael Johnson',
+        memo: recentCheck?.memo || 'Rent',
+        signature: recentCheck?.signature || 'John Smith',
+        routingNumber: recentCheck?.routingNumber || '022303659',
+        bankAccountNumber: recentCheck?.bankAccountNumber || '000000000000',
+        endorsementMode: getEndorsementMode(recentCheck?.endorsementMode),
+        endorsementText: recentCheck?.endorsementText || '',
+    }
 }
 
 const check = reactive(
     genNewCheck()
 )
 
-const line = ref(null)
+const line = ref<HTMLElement | null>(null)
+
+const backEndorsementLines = computed(() => {
+    if (check.endorsementMode === 'mobile') {
+        return ['For Mobile Deposit Only', check.signature].filter(Boolean)
+    }
+
+    if (check.endorsementMode === 'custom') {
+        return [check.endorsementText, check.signature].filter(Boolean)
+    }
+
+    return [check.signature].filter(Boolean)
+})
 
 watch(check, async () => {
     await nextTick(() => {
@@ -227,6 +268,11 @@ watch(check, async () => {
         check.lineLength = computedLine
     })
 }, { immediate: true })
+
+function updateEndorsementMode(mode: EndorsementMode, event: Event) {
+    const checked = (event.target as HTMLInputElement).checked
+    check.endorsementMode = checked ? mode : 'none'
+}
 
 function handlePrintShortcut(event: KeyboardEvent) {
     if (event.ctrlKey && event.key === 'p') {
@@ -236,21 +282,24 @@ function handlePrintShortcut(event: KeyboardEvent) {
 }
 
 onMounted(() => {
-    if (state.check) {
-        check.accountHolderName = state.check.accountHolderName
-        check.accountHolderAddress = state.check.accountHolderAddress
-        check.accountHolderCity = state.check.accountHolderCity
-        check.accountHolderState = state.check.accountHolderState
-        check.accountHolderZip = state.check.accountHolderZip
-        check.checkNumber = state.check.checkNumber
-        check.date = state.check.date
-        check.bankName = state.check.bankName
-        check.amount = state.check.amount
-        check.payTo = state.check.payTo
-        check.memo = state.check.memo
-        check.signature = state.check.signature
-        check.routingNumber = state.check.routingNumber
-        check.bankAccountNumber = state.check.bankAccountNumber
+    const savedCheck = state.check as SavedCheckData | null
+    if (savedCheck) {
+        check.accountHolderName = savedCheck.accountHolderName || check.accountHolderName
+        check.accountHolderAddress = savedCheck.accountHolderAddress || check.accountHolderAddress
+        check.accountHolderCity = savedCheck.accountHolderCity || check.accountHolderCity
+        check.accountHolderState = savedCheck.accountHolderState || check.accountHolderState
+        check.accountHolderZip = savedCheck.accountHolderZip || check.accountHolderZip
+        check.checkNumber = savedCheck.checkNumber || check.checkNumber
+        check.date = savedCheck.date || check.date
+        check.bankName = savedCheck.bankName || check.bankName
+        check.amount = savedCheck.amount || check.amount
+        check.payTo = savedCheck.payTo || check.payTo
+        check.memo = savedCheck.memo || check.memo
+        check.signature = savedCheck.signature || check.signature
+        check.routingNumber = savedCheck.routingNumber || check.routingNumber
+        check.bankAccountNumber = savedCheck.bankAccountNumber || check.bankAccountNumber
+        check.endorsementMode = getEndorsementMode(savedCheck.endorsementMode)
+        check.endorsementText = savedCheck.endorsementText || ''
     }
     state.check = null
 
