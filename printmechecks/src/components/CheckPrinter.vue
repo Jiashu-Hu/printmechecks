@@ -284,22 +284,22 @@ function handlePrintShortcut(event: KeyboardEvent) {
 onMounted(() => {
     const savedCheck = state.check as SavedCheckData | null
     if (savedCheck) {
-        check.accountHolderName = savedCheck.accountHolderName || check.accountHolderName
-        check.accountHolderAddress = savedCheck.accountHolderAddress || check.accountHolderAddress
-        check.accountHolderCity = savedCheck.accountHolderCity || check.accountHolderCity
-        check.accountHolderState = savedCheck.accountHolderState || check.accountHolderState
-        check.accountHolderZip = savedCheck.accountHolderZip || check.accountHolderZip
-        check.checkNumber = savedCheck.checkNumber || check.checkNumber
-        check.date = savedCheck.date || check.date
-        check.bankName = savedCheck.bankName || check.bankName
-        check.amount = savedCheck.amount || check.amount
-        check.payTo = savedCheck.payTo || check.payTo
-        check.memo = savedCheck.memo || check.memo
-        check.signature = savedCheck.signature || check.signature
-        check.routingNumber = savedCheck.routingNumber || check.routingNumber
-        check.bankAccountNumber = savedCheck.bankAccountNumber || check.bankAccountNumber
+        check.accountHolderName = savedCheck.accountHolderName ?? check.accountHolderName
+        check.accountHolderAddress = savedCheck.accountHolderAddress ?? check.accountHolderAddress
+        check.accountHolderCity = savedCheck.accountHolderCity ?? check.accountHolderCity
+        check.accountHolderState = savedCheck.accountHolderState ?? check.accountHolderState
+        check.accountHolderZip = savedCheck.accountHolderZip ?? check.accountHolderZip
+        check.checkNumber = savedCheck.checkNumber ?? check.checkNumber
+        check.date = savedCheck.date ?? check.date
+        check.bankName = savedCheck.bankName ?? check.bankName
+        check.amount = savedCheck.amount ?? check.amount
+        check.payTo = savedCheck.payTo ?? check.payTo
+        check.memo = savedCheck.memo ?? check.memo
+        check.signature = savedCheck.signature ?? check.signature
+        check.routingNumber = savedCheck.routingNumber ?? check.routingNumber
+        check.bankAccountNumber = savedCheck.bankAccountNumber ?? check.bankAccountNumber
         check.endorsementMode = getEndorsementMode(savedCheck.endorsementMode)
-        check.endorsementText = savedCheck.endorsementText || ''
+        check.endorsementText = savedCheck.endorsementText ?? ''
     }
     state.check = null
 
