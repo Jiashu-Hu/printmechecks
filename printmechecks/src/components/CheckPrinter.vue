@@ -227,10 +227,12 @@ function printCheck (target: PrintTarget = 'sheet') {
         back: '#check-back',
     }
     const targetSelector = selectorByTarget[target]
+    const printScale = target === 'sheet' ? '0.8375' : '0.88'
     const style = document.createElement('style');
     style.textContent = `
       @media print {
         @page {
+          size: letter landscape;
           margin: 0;
         }
         body {
@@ -249,15 +251,25 @@ function printCheck (target: PrintTarget = 'sheet') {
           position: fixed !important;
           top: 0;
           left: 0;
+          width: 1200px !important;
+          max-width: 100vw !important;
+          height: auto !important;
           margin: 0 !important;
           border: none !important;
           box-shadow: none !important;
           background-color: white !important;
+          transform: scale(${printScale});
+          transform-origin: top left;
         }
         .check-front,
         .check-back {
+          border: none !important;
+          box-shadow: none !important;
           break-inside: avoid;
           page-break-inside: avoid;
+        }
+        .check-cut-gap {
+          border: none !important;
         }
         ${target === 'sheet' ? '.check-cut-gap { visibility: visible !important; }' : ''}
       }
