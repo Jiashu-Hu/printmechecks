@@ -20,10 +20,18 @@
                     Pay to the <br>Order of <span class="payto-line"></span>
                 </div>
                 <div class="amount-line-data" ref="line" style="position: absolute; top: 240px; left: 100px">
-                    ***
-                    {{toWords(check.amount)}} 
-                    ***
+                    {{toWords(check.amount)}}
                 </div>
+                <img
+                    src="@/assets/check-line.png"
+                    class="check-line-img"
+                    :style="{
+                        left: `${(check.lineLength || 0) + 128}px`,
+                        display: (check.lineLength || 0) > 600 ? 'none' : '',
+                        maxWidth: `${780 - (check.lineLength || 0)}px`,
+                    }"
+                    alt=""
+                >
                 <div class="amount-line" style="position: absolute; top: 250px; left: 60px">
                     <span class="dollar-line"></span>
                 </div>
@@ -205,20 +213,18 @@ function getEndorsementMode(value: unknown): EndorsementMode {
 const state = useAppStore()
 
 const toWordsTool = new ToWords({
-  localeCode: 'en-US',
-  converterOptions: {
-    currency: true,
-    ignoreDecimal: false,
-    ignoreZeroCurrency: false,
-    doNotAddOnly: true,
-  },
-});
+    localeCode: 'en-US',
+})
 
 const toWords: (denom: number | string) => string = (denom) => {
     try {
-        return toWordsTool.convert(Number(denom), );
+        const value = Number(String(denom).replace(/[^0-9.-]/g, ''))
+        const [dollars, cents] = (Number.isFinite(value) ? Math.abs(value) : 0)
+            .toFixed(2)
+            .split('.')
+        return `${toWordsTool.convert(Number(dollars))} And ${cents}/100`
     } catch (e) {
-        return `${e}`;
+        return `${e}`
     }
 }
 
@@ -409,6 +415,12 @@ label {
 }
 .amount-line-data {
     text-transform: capitalize;
+}
+.check-line-img {
+    max-height: 16px;
+    position: absolute;
+    top: 236px;
+    width: 400px;
 }
 .date-data, .pay-to-data, .amount-data{
     font-size: 20px;
