@@ -48,8 +48,10 @@
             <div class="check-cut-gap"></div>
             <div class="check-back" id="check-back">
                 <img src="@/assets/check-back.svg" class="check-back-template" alt="">
-                <div class="back-endorsement-data">
-                    <div v-for="(line, index) in backEndorsementLines" :key="index">{{ line }}</div>
+                <div class="back-endorsement-layer">
+                    <div class="back-endorsement-data">
+                        <div v-for="(line, index) in backEndorsementLines" :key="index">{{ line }}</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -478,7 +480,8 @@ label {
     overflow: hidden;
 }
 
-.check-back-template {
+.check-back-template,
+.back-endorsement-layer {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -488,14 +491,18 @@ label {
     transform-origin: center center;
 }
 
+.back-endorsement-layer {
+    pointer-events: none;
+}
+
 .back-endorsement-data {
     position: absolute;
-    top: 72px;
-    right: 112px;
-    width: 310px;
+    top: 50px;
+    left: 38px;
+    width: 385px;
     font-family: Caveat;
-    font-size: 34px;
-    line-height: 1.15;
+    font-size: 30px;
+    line-height: 0.95;
     transform: rotate(-2deg);
     white-space: pre-line;
 }
