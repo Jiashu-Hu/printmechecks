@@ -1,7 +1,8 @@
 <template>
-    <div class="wrapper" id="wrapper" style="position: relative;">
-        <div class="check-box" id="check-box">
-            <div style="position: relative;" id="check-box-print">
+    <div class="wrapper" id="wrapper">
+        <div class="check-sheet" id="check-sheet">
+            <div class="check-front" id="check-front">
+                <div class="check-front-print" id="check-box-print">
                 <div class="account-holder-name" style="position: absolute; top: 40px; left: 60px">{{check.accountHolderName}}</div>
                 <div class="account-holder-address" style="position: absolute; top: 70px; left: 60px">
                     {{check.accountHolderAddress}}<br>
@@ -42,11 +43,22 @@
                     <div class="bank-account" style="display: inline;">{{check.bankAccountNumber}}c</div>
                     <div class="check-number" style="display: inline; margin-left:20px">{{check.checkNumber}}</div>
                 </div>
+                </div>
+            </div>
+            <div class="check-cut-gap"></div>
+            <div class="check-back" id="check-back">
+                <img src="@/assets/check-back.svg" class="check-back-template" alt="">
+                <div class="back-endorsement-data">
+                    <div v-for="line in backEndorsementLines" :key="line">{{ line }}</div>
+                </div>
             </div>
         </div>
-        <div class="check-data" style="position: absolute; top: 450px">
+        <div class="check-data">
             <div class="alert alert-primary" role="alert"><strong>Background does not print.</strong></div>
-            <button type="button" style="float: right;" class="btn btn-primary" @click="printCheck">Print (Ctrl + P)</button>
+            <div style="float: right;">
+                <button type="button" class="btn btn-primary" style="margin-right: 10px;" @click="printCheck('front')">Print Front</button>
+                <button type="button" class="btn btn-primary" @click="printCheck('back')">Print Back</button>
+            </div>
             <form class="row g-3">
                 <div class="col-md-6">
                     <label for="inputEmail4" class="form-label">Account Holder Name</label>
@@ -110,6 +122,41 @@
                     <label for="inputZip" class="form-label">Signature</label>
                     <input type="text" class="form-control" v-model="check.signature">
                 </div>
+                <div class="col-md-2">
+                    <div class="form-check" style="margin-top: 32px;">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="mobileDeposit"
+                            :checked="check.endorsementMode === 'mobile'"
+                            :disabled="check.endorsementMode === 'custom'"
+                            @change="updateEndorsementMode('mobile', $event)"
+                        >
+                        <label class="form-check-label" for="mobileDeposit">Mobile</label>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-check" style="margin-top: 32px;">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="customEndorsement"
+                            :checked="check.endorsementMode === 'custom'"
+                            :disabled="check.endorsementMode === 'mobile'"
+                            @change="updateEndorsementMode('custom', $event)"
+                        >
+                        <label class="form-check-label" for="customEndorsement">Endorse</label>
+                    </div>
+                </div>
+                <div class="col-md-6" v-if="check.endorsementMode === 'custom'">
+                    <label for="endorsementText" class="form-label">Endorsement</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="endorsementText"
+                        v-model="check.endorsementText"
+                    >
+                </div>
             </form>
             <div class="col-12" style="margin-top: 30px;">
                 <button type="button" class="btn btn-primary" @click="saveToHistory">Save to History</button>
@@ -172,7 +219,7 @@ const toWords: (denom: number | string) => string = (denom) => {
     }
 }
 
-function printCheck () {
+function printCheck (_side?: 'front' | 'back') {
     const style = document.createElement('style');
     style.textContent = `
       @media print {
