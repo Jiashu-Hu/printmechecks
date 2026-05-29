@@ -252,7 +252,6 @@ function printCheck (target: PrintTarget = 'sheet') {
           top: 0;
           left: 0;
           width: 1200px !important;
-          max-width: 100vw !important;
           height: auto !important;
           margin: 0 !important;
           border: none !important;
