@@ -172,6 +172,7 @@ import { formatMoney } from '../utilities'
 import { useAppStore } from '../stores/app'
 
 type EndorsementMode = 'none' | 'mobile' | 'custom'
+type PrintTarget = 'sheet' | 'front' | 'back'
 
 type CheckData = {
     accountHolderName: string
@@ -219,7 +220,13 @@ const toWords: (denom: number | string) => string = (denom) => {
     }
 }
 
-function printCheck (_side?: 'front' | 'back') {
+function printCheck (target: PrintTarget = 'sheet') {
+    const selectorByTarget = {
+        sheet: '#check-sheet',
+        front: '#check-front',
+        back: '#check-back',
+    }
+    const targetSelector = selectorByTarget[target]
     const style = document.createElement('style');
     style.textContent = `
       @media print {
@@ -227,34 +234,32 @@ function printCheck (_side?: 'front' | 'back') {
           margin: 0;
         }
         body {
-          transform: scale(1);
-          transform-origin: top center;
-          width: 149%;
           margin: 0;
           padding: 0;
+          background: white;
         }
-        .wrapper > *:not(.check-box) {
-          display: none !important;
+        body * {
+          visibility: hidden !important;
         }
-        .check-data {
-            display: none;
+        ${targetSelector},
+        ${targetSelector} * {
+          visibility: visible !important;
         }
-        .check-box {
-          position: fixed;
+        ${targetSelector} {
+          position: fixed !important;
           top: 0;
           left: 0;
-          width: 100%;
-          height: 100%;
-          margin: 0;
-          padding: 0px;
-          background-color: white;
-          background: white !important;
+          margin: 0 !important;
           border: none !important;
           box-shadow: none !important;
+          background-color: white !important;
         }
-        .check-box-print {
-          position: relative;
+        .check-front,
+        .check-back {
+          break-inside: avoid;
+          page-break-inside: avoid;
         }
+        ${target === 'sheet' ? '.check-cut-gap { visibility: visible !important; }' : ''}
       }
     `;
     document.head.appendChild(style);
@@ -324,7 +329,7 @@ function updateEndorsementMode(mode: EndorsementMode, event: Event) {
 function handlePrintShortcut(event: KeyboardEvent) {
     if (event.ctrlKey && event.key === 'p') {
         event.preventDefault();
-        printCheck();
+        printCheck('sheet');
     }
 }
 
