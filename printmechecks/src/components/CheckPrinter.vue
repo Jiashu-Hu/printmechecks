@@ -228,6 +228,9 @@ function printCheck (target: PrintTarget = 'sheet') {
     }
     const targetSelector = selectorByTarget[target]
     const printScale = target === 'sheet' ? '0.8375' : '0.88'
+    const printHeight = target === 'sheet' ? '974px' : '462px'
+    const hiddenSheetChildren =
+        target === 'sheet' ? '' : `#check-sheet > *:not(${targetSelector}) { display: none !important; }`
     const style = document.createElement('style');
     style.textContent = `
       @media print {
@@ -240,9 +243,20 @@ function printCheck (target: PrintTarget = 'sheet') {
           padding: 0;
           background: white;
         }
+        html,
+        body,
+        #app {
+          width: 11in !important;
+          height: 8.5in !important;
+          overflow: hidden !important;
+        }
         body * {
           visibility: hidden !important;
         }
+        .check-data {
+          display: none !important;
+        }
+        ${hiddenSheetChildren}
         ${targetSelector},
         ${targetSelector} * {
           visibility: visible !important;
@@ -252,7 +266,7 @@ function printCheck (target: PrintTarget = 'sheet') {
           top: 0;
           left: 0;
           width: 1200px !important;
-          height: auto !important;
+          height: ${printHeight} !important;
           margin: 0 !important;
           border: none !important;
           box-shadow: none !important;
