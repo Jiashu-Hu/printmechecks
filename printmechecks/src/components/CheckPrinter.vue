@@ -509,7 +509,7 @@ label {
 
 .back-endorsement-data {
     position: absolute;
-    top: 118px;
+    top: 132px;
     left: 38px;
     width: 385px;
     font-family: Caveat;
