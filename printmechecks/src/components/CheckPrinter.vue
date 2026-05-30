@@ -498,7 +498,7 @@ label {
     top: 50%;
     left: 50%;
     width: 462px;
-    height: 1200px;
+    height: 1048px;
     transform: translate(-50%, -50%) rotate(90deg);
     transform-origin: center center;
 }
@@ -509,7 +509,7 @@ label {
 
 .back-endorsement-data {
     position: absolute;
-    top: 118px;
+    top: 44px;
     left: 38px;
     width: 385px;
     font-family: Caveat;
