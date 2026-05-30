@@ -26,7 +26,7 @@ Simple Vue App for printing checks on 8.5x11 paper.
 If you don't want to run the project locally, you can try out the demo version for free. Hosting is not guaranteed to be
 up and running in the future though, but I'll keep it up as long as I can. 
 
-[Demo](https://printmechecks.tiiny.site/)
+[Demo](https://jiashu-hu.github.io/printmechecks/)
 
 ## Requirements
 ***Must Have Node installed***
